@@ -29,6 +29,7 @@ on:
             - '.devcontainer/**'
             - '.vscode/**'
             - '.*ignore'
+            - renovate.json
             - LICENSE
             - '**.md'
 jobs:
