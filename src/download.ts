@@ -26,24 +26,31 @@ import { HttpClient } from '@actions/http-client';
 import { getInputs } from './inputs';
 import { rcompare } from 'semver';
 import * as tc from '@actions/tool-cache';
+import { Lazy } from '@noelware/utils';
 
-const inputs = getInputs();
-const httpClient = new HttpClient('auguwu/setup-bazel', [], {
-    headers: {
-        Authorization: `Bearer ${inputs.token}`
-    }
-});
+const inputs = new Lazy(getInputs);
 
-const normalizeVersionInput = (version: string) => {
+// exported only for tests
+export const normalizeVersionInput = (version: string) => {
     const parts = version.split('.');
-    if (parts.length === 1) return `${parts[0]}.0.0`;
-    if (parts.length === 2) return `${parts[0]}.${parts[1]}.0`;
+    const originating = parts.shift();
+
+    if (parts.length === 1) return `${originating}.0.0`;
+    if (parts.length === 2)
+        return `${originating}.${parts[0]}${`.${parts.at(1) === 'x' ? '0' : parts.at(1)!}` || '.0'}`;
 
     return version;
 };
 
 const requestReleasesPage = async (pageCursor = 1) => {
     debug('Resolving versions from repository bazelbuild/bazel');
+
+    const token = inputs.get();
+    const httpClient = new HttpClient('auguwu/setup-bazel', [], {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
 
     const releases = await httpClient
         .getJson<any[]>(`https://api.github.com/repos/bazelbuild/bazel/releases?page=${pageCursor}&per_page=100`)
