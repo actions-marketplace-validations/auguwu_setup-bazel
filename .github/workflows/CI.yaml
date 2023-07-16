@@ -91,6 +91,9 @@ jobs:
               with:
                   token: ${{github.token}}
                   bazel-version: latest
+                  hash-files: |
+                      ./playground/test/BUILD
+                      ./playground/WORKSPACE
 
             - name: Run Python application
               working-directory: ./playground

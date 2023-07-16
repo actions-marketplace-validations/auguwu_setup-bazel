@@ -27,7 +27,7 @@ branding:
     icon: heart
 runs:
     using: node16
-    post: ./build/save_action.js
+    #post: ./build/save_action.js
     main: ./build/action.js
 inputs:
     hash-files:
@@ -36,7 +36,6 @@ inputs:
         default: |
             BUILD
             WORKSPACE
-
     include-prerelease:
         description: Whether if prereleases of Bazel can be downloaded.
         required: false

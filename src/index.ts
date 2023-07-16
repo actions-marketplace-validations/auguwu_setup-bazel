@@ -21,19 +21,13 @@
  * SOFTWARE.
  */
 
-import { addPath, debug, endGroup, info, saveState, setFailed, setOutput, startGroup, warning } from '@actions/core';
-import { hashFiles } from '@actions/glob';
-import { getInputs } from './inputs';
+import { addPath, endGroup, info, setFailed, setOutput, startGroup } from '@actions/core';
 import { dirname } from 'path';
-import * as cache from '@actions/cache';
 import * as dl from './download';
 import * as tc from '@actions/tool-cache';
-import { major, minor, patch } from 'semver';
-import { userInfo } from 'os';
-import { hasOwnProperty } from '@noelware/utils';
 
 async function main() {
-    const inputs = getInputs();
+    // const inputs = getInputs();
     const version = await dl.getBazelVersion();
     let bazelBinary = tc.find('bazel', version);
     if (!bazelBinary) {
@@ -48,29 +42,29 @@ async function main() {
     addPath(dirname(bazelBinary));
 
     info(`Bazel v${version} was installed! :tada:`);
-    const hash = await hashFiles(inputs['hash-files']);
-    saveState('bazel:cacheHash', hash);
+    // const hash = await hashFiles(inputs['hash-files']);
+    // saveState('bazel:cacheHash', hash);
 
-    debug(`computed hash for inputs [${inputs['hash-files'].split('\n').join(', ')}]: ${hash}`);
-    const cachePrimaryKey = `bazel-${process.platform === 'win32' ? 'windows' : process.platform}-${
-        process.arch === 'x64' ? 'x86_64' : process.arch
-    }-${major(version)}.${minor(version)}.${patch(version)}-${hash}`;
+    // debug(`computed hash for inputs [${inputs['hash-files'].split('\n').join(', ')}]: ${hash}`);
+    // const cachePrimaryKey = `bazel-${process.platform === 'win32' ? 'windows' : process.platform}-${
+    //     process.arch === 'x64' ? 'x86_64' : process.arch
+    // }-${major(version)}.${minor(version)}.${patch(version)}-${hash}`;
 
-    debug(`computed cache key: ${cachePrimaryKey}`);
-    const key = await cache.restoreCache(['~/.cache/bazel'], cachePrimaryKey, [
-        `bazel-${process.platform === 'win32' ? 'windows' : process.platform}-${
-            process.arch === 'x64' ? 'x86_64' : process.arch
-        }-${major(version)}.${minor(version)}.${patch(version)}-`
-    ]);
+    // debug(`computed cache key: ${cachePrimaryKey}`);
+    // const key = await cache.restoreCache(['~/.cache/bazel'], cachePrimaryKey, [
+    //     `bazel-${process.platform === 'win32' ? 'windows' : process.platform}-${
+    //         process.arch === 'x64' ? 'x86_64' : process.arch
+    //     }-${major(version)}.${minor(version)}.${patch(version)}-`
+    // ]);
 
-    setOutput('cache-hit', Boolean(key));
-    saveState('bazel:cachePrimaryKey', cachePrimaryKey);
+    // setOutput('cache-hit', Boolean(key));
+    // saveState('bazel:cachePrimaryKey', cachePrimaryKey);
 
-    if (key) {
-        info(`Bazel cache  was successfully hit`);
-    } else {
-        warning(`Cache was not hit, Bazel might take a while to build or run tests!`);
-    }
+    // if (key) {
+    //     info(`Bazel cache  was successfully hit`);
+    // } else {
+    //     warning(`Cache was not hit, Bazel might take a while to build or run tests!`);
+    // }
 }
 
 main().catch((ex) => {

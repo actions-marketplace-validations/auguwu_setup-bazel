@@ -21,14 +21,14 @@
  * SOFTWARE.
  */
 
-import { getState, info, setFailed } from '@actions/core';
-import { saveCache } from '@actions/cache';
+import { setFailed } from '@actions/core';
+// import { saveCache } from '@actions/cache';
 
 async function main() {
-    info('Now saving Bazel cache...');
-
-    const primaryKey = getState('bazel:cachePrimaryKey');
-    await saveCache(['~/.cache/bazel'], primaryKey);
+    // TODO: this
+    // info('Now saving Bazel cache...');
+    // const primaryKey = getState('bazel:cachePrimaryKey');
+    // await saveCache(['~/.cache/bazel'], primaryKey);
 }
 
 main().catch((ex) => {
