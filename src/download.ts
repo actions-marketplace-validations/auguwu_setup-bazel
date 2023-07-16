@@ -45,7 +45,7 @@ export const normalizeVersionInput = (version: string) => {
 const requestReleasesPage = async (pageCursor = 1) => {
     debug('Resolving versions from repository bazelbuild/bazel');
 
-    const token = inputs.get();
+    const { token } = inputs.get();
     const httpClient = new HttpClient('auguwu/setup-bazel', [], {
         headers: {
             Authorization: `Bearer ${token}`

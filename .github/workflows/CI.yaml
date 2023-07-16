@@ -71,6 +71,9 @@ jobs:
             - name: Run ESLint
               run: yarn lint
 
+            - name: Check for formatting issues
+              run: yarn fmt
+
             - name: Run tests
               run: yarn test
 

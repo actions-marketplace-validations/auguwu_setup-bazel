@@ -21,14 +21,79 @@
  * SOFTWARE.
  */
 
+import { getFileInfo, resolveConfig, format, check } from 'prettier';
+import { dirname, relative, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { globby } from 'globby';
 import getLogger from './util/logging';
+import assert from 'assert';
 import run from './util/run';
+import { readFile, writeFile } from 'fs/promises';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const exts = ['js', 'ts', 'yaml', 'yml', 'json', 'md'] as const;
+const isCI = process.env.CI !== undefined;
 const log = getLogger('prettier');
 
 run(async () => {
-    log.info('Formatting all files...');
+    const action = isCI ? 'Checking' : 'Formatting';
+    log.info(`${action} all files!`);
+
+    const config = await resolveConfig(resolve(process.cwd(), '.prettierrc.json'));
+    assert(config !== null, ".prettierrc.json doesn't exist?");
+
+    const files = await globby(
+        exts.map((f) => `**/*.${f}`),
+        {
+            throwErrorOnBrokenSymbolicLink: true,
+            gitignore: true
+        }
+    );
+
+    const faultyFiles: string[] = [];
+    for (const file of files) {
+        const start = Date.now();
+        log.await(relative(process.cwd(), file));
+
+        const fileInfo = await getFileInfo(file, { resolveConfig: true });
+        if (fileInfo.ignored || fileInfo.inferredParser === null) {
+            continue;
+        }
+
+        const contents = await readFile(file, 'utf-8');
+        if (isCI) {
+            const isFormattedProperly = await check(contents, {
+                parser: fileInfo.inferredParser!,
+                ...config
+            });
+
+            if (!isFormattedProperly) {
+                log.error(
+                    `${relative(
+                        process.cwd(),
+                        file
+                    )} is not formatted properly: please run \`yarn fmt\` to fix this on non CI machine [${
+                        Date.now() - start
+                    }ms]`
+                );
+
+                faultyFiles.push(file);
+
+                continue;
+            }
+        } else {
+            const src = await format(contents, {
+                parser: fileInfo.inferredParser!,
+                ...config
+            });
+
+            await writeFile(file, src, { encoding: 'utf-8' });
+        }
+
+        log.success(`${relative(process.cwd(), file)} [${Date.now() - start}ms]`);
+    }
+
+    if (faultyFiles.length) {
+        process.exit(1);
+    }
 });
