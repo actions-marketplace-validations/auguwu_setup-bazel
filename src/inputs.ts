@@ -26,6 +26,7 @@ import { getInput } from '@actions/core';
 export interface Inputs {
     'include-prerelease': boolean;
     'bazel-version': string;
+    'hash-files': string;
     token: string;
 }
 
@@ -43,5 +44,6 @@ export const getBooleanInput = <S extends keyof Inputs>(key: S, defaultValue = f
 export const getInputs = (): Inputs => ({
     'include-prerelease': getBooleanInput('include-prerelease'),
     'bazel-version': getInput('bazel-version', { trimWhitespace: true }) || 'latest',
+    'hash-files': getInput('hash-files', { trimWhitespace: true }) || 'BUILD\nWORKSPACE',
     token: getInput('token', { required: true, trimWhitespace: true })
 });

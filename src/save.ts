@@ -20,3 +20,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
+import { getState, info, setFailed } from '@actions/core';
+import { hasOwnProperty } from '@noelware/utils';
+import { saveCache } from '@actions/cache';
+
+async function main() {
+    info('Now saving Bazel cache...');
+
+    const primaryKey = getState('bazel:cachePrimaryKey');
+    const winHome = hasOwnProperty(process.env, 'USERPROFILE') ? process.env.USERPROFILE! : process.env.HOME!;
+    const mainCacheDir =
+        process.platform === 'linux' ? '~/.cache/bazel' : process.platform === 'darwin' ? '/private/var/tmp' : winHome;
+
+    await saveCache([mainCacheDir], primaryKey);
+}
+
+main().catch((ex) => {
+    setFailed(ex);
+    process.exit(1);
+});

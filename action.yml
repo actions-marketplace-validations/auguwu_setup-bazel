@@ -30,6 +30,13 @@ runs:
     post: ./build/save_action.js
     main: ./build/action.js
 inputs:
+    hash-files:
+        description: A list of files to hash to compute the final cache hash.
+        required: false
+        default: |
+            BUILD
+            WORKSPACE
+
     include-prerelease:
         description: Whether if prereleases of Bazel can be downloaded.
         required: false
