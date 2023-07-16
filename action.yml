@@ -19,7 +19,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-name: Setup Bazel
+name: Setup Bazel GitHub Action
 description: 🐻‍❄️🍁 GitHub action to setup Bazel with action cache support
 author: Noel Towa <cutie@floofy.dev>
 branding:
