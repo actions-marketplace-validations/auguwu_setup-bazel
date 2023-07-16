@@ -57,7 +57,7 @@ run(async () => {
         minify: true
     });
 
-    const saveTook = actionResult.stats.compilation.endTime - actionResult.stats.compilation.startTime;
+    const saveTook = saveResult.stats.compilation.endTime - saveResult.stats.compilation.startTime;
     log.success(`Built build/save_action.js [${saveTook}ms]`);
 
     await writeFile(resolve(process.cwd(), 'build/save_action.js'), BANNER + saveResult.code);

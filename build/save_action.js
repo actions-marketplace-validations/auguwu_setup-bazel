@@ -1,3 +1,5 @@
+/* eslint-ignore */
+//prettier-ignore
 /*
  * 🐻‍❄️🍁 setup-bazel: GitHub action to setup Bazel with action cache support
  * Copyright (c) 2023 Noel Towa <cutie@floofy.dev>
@@ -20,15 +22,4 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import getLogger from './util/logging';
-import run from './util/run';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const log = getLogger('prettier');
-
-run(async () => {
-    log.info('Formatting all files...');
-});
+(()=>{"use strict";if(typeof __nccwpck_require__!=="undefined")__nccwpck_require__.ab=__dirname+"/";var e={};module.exports=e})();

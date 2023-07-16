@@ -29,6 +29,7 @@ on:
             - '.devcontainer/**'
             - '.vscode/**'
             - '.github/**'
+            - 'build/**'
             - '.*ignore'
             - renovate.json
             - LICENSE
@@ -38,6 +39,7 @@ on:
         paths-ignore:
             - '.devcontainer/**'
             - '.vscode/**'
+            - 'build/**'
             - '.*ignore'
             - renovate.json
             - LICENSE
