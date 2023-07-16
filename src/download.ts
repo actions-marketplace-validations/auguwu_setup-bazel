@@ -129,5 +129,7 @@ export const resolveAndDownload = async (version: string) => {
 
     info(`Installing Bazel v${version}!`);
     const binary = await tc.downloadTool(downloadUrl);
-    return tc.cacheFile(binary, `bazel-${version}-${os}-${arch}`, 'bazel', version);
+    const dir = await tc.cacheFile(binary, `bazel${os === 'windows' ? '.exe' : ''}`, 'bazel', version);
+
+    return `${dir}/bazel${os === 'windows' ? '.exe' : ''}`;
 };

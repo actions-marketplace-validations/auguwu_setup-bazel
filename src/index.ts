@@ -22,6 +22,7 @@
  */
 
 import { addPath, endGroup, info, setFailed, setOutput, startGroup } from '@actions/core';
+import { dirname } from 'path';
 import * as dl from './download';
 import * as tc from '@actions/tool-cache';
 
@@ -37,7 +38,9 @@ async function main() {
     }
 
     setOutput('binary', bazelBinary);
-    //addPath(bazelBinary);
+    addPath(dirname(bazelBinary));
+
+    info(`Bazel v${version} was installed! :tada:`);
 }
 
 main().catch((ex) => {
