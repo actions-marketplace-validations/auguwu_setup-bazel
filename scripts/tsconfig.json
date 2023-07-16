@@ -1,0 +1,14 @@
+{
+    "extends": "@augu/tsconfig",
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "target": "ESNext",
+        "module": "ESNext",
+        "removeComments": true,
+        "types": ["node", "./@types/vercel__ncc.d.ts"],
+        "rootDir": ".",
+        "noEmit": true // tsx does this, so useless for `tsc` to do it
+    },
+    "exclude": ["node_modules"],
+    "include": ["**/*.ts"]
+}

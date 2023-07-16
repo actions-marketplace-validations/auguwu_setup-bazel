@@ -1,0 +1,46 @@
+# 🐻‍❄️🍁 setup-bazel: GitHub action to setup Bazel with action cache support
+# Copyright (c) 2023 Noel Towa <cutie@floofy.dev>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+name: Setup Bazel
+description: 🐻‍❄️🍁 GitHub action to setup Bazel with action cache support
+author: Noel Towa <cutie@floofy.dev>
+branding:
+    color: green
+    icon: heart
+runs:
+    using: node16
+    post: ./build/save_action.js
+    main: ./build/action.js
+inputs:
+    include-prerelease:
+        description: Whether if prereleases of Bazel can be downloaded.
+        required: false
+        default: 'false'
+    bazel-version:
+        description: Version of Bazel to download from. Supports SemVer ranges (`>=2.x`), "latest", [major].x/[major].[minor].x, and full version ("6.2.1")
+        required: false
+        default: latest
+    token:
+        description: GitHub token to use to grab latest version of Bazel.
+        required: true
+outputs:
+    cache-hit:
+        description: Boolean to indicate if a cache hit on ~/.cache/bazel has been hit.
