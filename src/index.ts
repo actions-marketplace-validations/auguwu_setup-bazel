@@ -57,12 +57,7 @@ async function main() {
     }-${major(version)}.${minor(version)}.${patch(version)}-${hash}`;
 
     debug(`computed cache key: ${cachePrimaryKey}`);
-
-    const winHome = hasOwnProperty(process.env, 'USERPROFILE') ? process.env.USERPROFILE! : process.env.HOME!;
-    const mainCacheDir =
-        process.platform === 'linux' ? '~/.cache/bazel' : process.platform === 'darwin' ? '/private/var/tmp' : winHome;
-
-    const key = await cache.restoreCache([mainCacheDir], cachePrimaryKey, [
+    const key = await cache.restoreCache(['~/.cache/bazel'], cachePrimaryKey, [
         `bazel-${process.platform === 'win32' ? 'windows' : process.platform}-${
             process.arch === 'x64' ? 'x86_64' : process.arch
         }-${major(version)}.${minor(version)}.${patch(version)}-`
@@ -72,9 +67,9 @@ async function main() {
     saveState('bazel:cachePrimaryKey', cachePrimaryKey);
 
     if (key) {
-        info(`Bazel cache dir [${mainCacheDir}] was successfully hit`);
+        info(`Bazel cache  was successfully hit`);
     } else {
-        warning(`Cache dir [${mainCacheDir}] was not hit, Bazel might take a while to build or run tests!`);
+        warning(`Cache was not hit, Bazel might take a while to build or run tests!`);
     }
 }
 
