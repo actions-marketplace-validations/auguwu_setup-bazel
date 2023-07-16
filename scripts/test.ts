@@ -36,7 +36,9 @@ run(async () => {
     if (!isCI) {
         return execa('yarn', ['vitest', 'run'], {
             stdio: ['ignore', 'inherit', 'inherit']
-        }).then(noop);
+        })
+            .then(noop)
+            .catch(noop);
     }
 
     log.await('Starting test runner...');
