@@ -23,12 +23,12 @@
 
 import { getFileInfo, resolveConfig, format, check } from 'prettier';
 import { dirname, relative, resolve } from 'path';
+import { readFile, writeFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { globby } from 'globby';
 import getLogger from './util/logging';
 import assert from 'assert';
 import run from './util/run';
-import { readFile, writeFile } from 'fs/promises';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const exts = ['js', 'ts', 'yaml', 'yml', 'json', 'md'] as const;
@@ -55,8 +55,14 @@ run(async () => {
         const start = Date.now();
         log.await(relative(process.cwd(), file));
 
-        const fileInfo = await getFileInfo(file, { resolveConfig: true });
+        const fileInfo = await getFileInfo(file, {
+            withNodeModules: false,
+            resolveConfig: true,
+            ignorePath: [resolve(__dirname, '../.prettierignore'), resolve(__dirname, '../.gitignore')]
+        });
+
         if (fileInfo.ignored || fileInfo.inferredParser === null) {
+            log.info(`${relative(process.cwd(), file)} [skipped - ${Date.now() - start}ms]`);
             continue;
         }
 
