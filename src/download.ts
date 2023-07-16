@@ -57,7 +57,7 @@ const requestReleasesPage = async (pageCursor = 1) => {
         .then((r) => r.result ?? []);
 
     return releases
-        .filter((tag) => tag.tag_name.match(/v\d+\.[\w\.]+/g))
+        .filter((tag) => tag.tag_name.match(/v?\d+(\.[\w\.]+)?(-[\w]+)?[.]?/g))
         .filter((tag) => (input['include-prerelease'] ? true : tag.prerelease === false))
         .map((tag) => tag.tag_name)
         .sort((a, b) => rcompare(normalizeVersionInput(a), normalizeVersionInput(b)));
