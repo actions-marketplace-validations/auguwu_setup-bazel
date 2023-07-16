@@ -70,12 +70,18 @@ jobs:
 
             - name: Run ESLint
               run: yarn lint
+              env:
+                  COLOR: always
 
             - name: Check for formatting issues
               run: yarn fmt
+              env:
+                  COLOR: always
 
             - name: Run tests
               run: yarn test
+              env:
+                  COLOR: always
 
             - name: Setup Bazel
               uses: ./

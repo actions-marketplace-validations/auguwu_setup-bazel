@@ -25,8 +25,8 @@ import { debug, info } from '@actions/core';
 import { HttpClient } from '@actions/http-client';
 import { getInputs } from './inputs';
 import { rcompare } from 'semver';
-import * as tc from '@actions/tool-cache';
 import { Lazy } from '@noelware/utils';
+import * as tc from '@actions/tool-cache';
 
 const inputs = new Lazy(getInputs);
 
@@ -45,7 +45,7 @@ export const normalizeVersionInput = (version: string) => {
 const requestReleasesPage = async (pageCursor = 1) => {
     debug('Resolving versions from repository bazelbuild/bazel');
 
-    const { token } = inputs.get();
+    const { token, ...input } = inputs.get();
     const httpClient = new HttpClient('auguwu/setup-bazel', [], {
         headers: {
             Authorization: `Bearer ${token}`
@@ -58,13 +58,14 @@ const requestReleasesPage = async (pageCursor = 1) => {
 
     return releases
         .filter((tag) => tag.tag_name.match(/v\d+\.[\w\.]+/g))
-        .filter((tag) => (inputs['include-prerelease'] ? true : tag.prerelease === false))
+        .filter((tag) => (input['include-prerelease'] ? true : tag.prerelease === false))
         .map((tag) => tag.tag_name)
         .sort((a, b) => rcompare(normalizeVersionInput(a), normalizeVersionInput(b)));
 };
 
 export const getBazelVersion = async (): Promise<string> => {
-    if (inputs['bazel-version'] === 'latest') {
+    const bazelVersion = inputs.get()['bazel-version'];
+    if (bazelVersion === 'latest') {
         const firstPage = await requestReleasesPage();
         return firstPage.at(0)!;
     }
@@ -74,7 +75,7 @@ export const getBazelVersion = async (): Promise<string> => {
     let pages: string[];
 
     while ((pages = await requestReleasesPage(cursor++)).length > 0) {
-        const version = pages.find((tag) => tag === normalizeVersionInput(inputs['bazel-version']));
+        const version = pages.find((tag) => tag === normalizeVersionInput(bazelVersion));
         if (version !== undefined) {
             versionToUse = version;
             break;
@@ -82,7 +83,7 @@ export const getBazelVersion = async (): Promise<string> => {
     }
 
     if (!versionToUse) {
-        throw new Error(`Unable to resolve version "${inputs['bazel-version']}"`);
+        throw new Error(`Unable to resolve version "${bazelVersion}"`);
     }
 
     return versionToUse;
