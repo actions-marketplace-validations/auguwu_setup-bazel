@@ -21,7 +21,7 @@
  * SOFTWARE.
  */
 
-import { endGroup, info, setFailed, setOutput, startGroup } from '@actions/core';
+import { addPath, endGroup, info, setFailed, setOutput, startGroup } from '@actions/core';
 import * as dl from './download';
 import * as tc from '@actions/tool-cache';
 
@@ -37,6 +37,7 @@ async function main() {
     }
 
     setOutput('binary', bazelBinary);
+    //addPath(bazelBinary);
 }
 
 main().catch((ex) => {

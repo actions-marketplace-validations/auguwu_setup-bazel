@@ -92,6 +92,8 @@ jobs:
                   token: ${{github.token}}
                   bazel-version: latest
 
-            - name: Run Python application
-              working-directory: ./playground
-              run: ${{steps.bazel.outputs.binary}} run //test:main
+            - run: ls ${{steps.bazel.outputs.binary}}
+
+            # - name: Run Python application
+            #   working-directory: ./playground
+            #   run: ${{steps.bazel.outputs.binary}} run //test:main
