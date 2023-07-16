@@ -44,8 +44,8 @@ const MIT_LICENSE = [
     'SOFTWARE.'
 ] as const;
 
-export const JS_BANNER = ['/**', ...MIT_LICENSE.map((text) => ` * ${text}`), '*/'].join('\n');
-export const YAML_BANNER = MIT_LICENSE.map((text) => `# ${text}`).join('\n');
+export const JS_BANNER = ['/*', ...MIT_LICENSE.map((text) => ` * ${text}`.trimEnd()), ' */'].join('\n');
+export const YAML_BANNER = MIT_LICENSE.map((text) => `# ${text}`.trimEnd()).join('\n');
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export const BANNERS: Record<`.${'ts' | 'js' | 'yml' | 'yaml' | 'd.ts' | (string & {})}`, string> = {

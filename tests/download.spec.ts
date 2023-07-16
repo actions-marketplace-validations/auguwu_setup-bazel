@@ -36,7 +36,6 @@ test('normalize version', () => {
         { version: '6.2.x', toBe: '6.2.0' },
         { version: '6.2.1', toBe: '6.2.1' }
     ]) {
-        console.log(version, ':', normalizeVersionInput(version));
         expect(normalizeVersionInput(version)).toBe(toBe);
     }
 });
