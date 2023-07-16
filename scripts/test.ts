@@ -54,8 +54,13 @@ run(async () => {
         } passed tests, ${result.numFailedTests} failed tests)`
     );
 
+    let needsToExitEarly = false;
     for (const testResults of result.testResults) {
         log[testResults.status === 'failed' ? 'error' : 'success'](relative(process.cwd(), testResults.name));
+        if (testResults.status === 'failed' && !needsToExitEarly) {
+            needsToExitEarly = true;
+        }
+
         for (const assertionResult of testResults.assertionResults) {
             if (assertionResult.status === 'passed') {
                 log.success(`    ${assertionResult.fullName.trim()} [${assertionResult.duration}ms]`);
@@ -68,5 +73,9 @@ run(async () => {
                 startColumn: assertionResult.location.column
             });
         }
+    }
+
+    if (needsToExitEarly) {
+        process.exit(1);
     }
 });

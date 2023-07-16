@@ -33,9 +33,20 @@ test('resolve inputs', () => {
     expect(() => getInputs()).toThrowErrorMatchingInlineSnapshot('"Input required and not supplied: token"');
 
     setInput('token', 'arandomtoken');
-    expect(getInputs()).toStrictEqual({
-        'include-prerelease': false,
-        'bazel-version': 'latest',
-        token: 'arandomtoken'
-    });
+    const testInputs = () => {
+        const inputs = getInputs();
+        return {
+            ...inputs,
+            'hash-files': inputs['hash-files'].replaceAll('\n', ';')
+        };
+    };
+
+    expect(testInputs()).toMatchInlineSnapshot(`
+      {
+        "bazel-version": "latest",
+        "hash-files": "BUILD;WORKSPACE",
+        "include-prerelease": false,
+        "token": "arandomtoken",
+      }
+    `);
 });
