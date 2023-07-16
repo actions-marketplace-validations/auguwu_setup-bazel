@@ -28,6 +28,16 @@ on:
         paths-ignore:
             - '.devcontainer/**'
             - '.vscode/**'
+            - '.github/**'
+            - '.*ignore'
+            - renovate.json
+            - LICENSE
+            - '**.md'
+    pull_request:
+        types: [synchronize]
+        paths-ignore:
+            - '.devcontainer/**'
+            - '.vscode/**'
             - '.*ignore'
             - renovate.json
             - LICENSE
