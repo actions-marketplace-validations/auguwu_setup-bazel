@@ -73,6 +73,9 @@ async function main() {
         await chmod(resolve(dirname(bazelBinary), 'bazel'), 0o755);
     }
 
+    // Bazel binary didn't have executable permissions, so we need to do this
+    // so the Bash/PowerShell scripts work
+    await chmod(resolve(bazelBinary), 0o755);
     addPath(dirname(bazelBinary));
     info(`Bazel v${version} was installed! :tada:`);
 
