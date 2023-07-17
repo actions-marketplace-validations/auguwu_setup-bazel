@@ -9,8 +9,7 @@ Param(
 $BazelCacheDir = \\"/tmp/whatever\\";
 $BazelCommand = \\"bazel\\"
 
-& $BazelCommand \\"--output_base=$BazelCacheDir\\" $Arguments
-exit $LASTEXITCODE
+$BazelCommand \\"--output_base=$BazelCacheDir\\" $Arguments
 "
 `;
 
