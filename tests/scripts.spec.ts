@@ -21,21 +21,10 @@
  * SOFTWARE.
  */
 
-import { setFailed, info, getState } from '@actions/core';
-import { saveCache } from '@actions/cache';
+import { generateBazelPowerShell, generateBazelShell } from 'src/constants';
+import { expect, test } from 'vitest';
 
-async function main() {
-    info('Now saving Bazel cache...');
-    const primaryKey = getState('bazel:cachePrimaryKey');
-    const cacheDir =
-        process.platform === 'win32'
-            ? `${process.env.RUNNER_TEMP}\\.bazelcache`
-            : `${process.env.RUNNER_TEMP || '/tmp'}/cache/bazel`;
-
-    await saveCache([cacheDir], primaryKey);
-}
-
-main().catch((ex) => {
-    setFailed(ex);
-    process.exit(1);
+test('scripts are expected to be', () => {
+    expect(generateBazelPowerShell({ bazelCommand: 'bazel', cacheDir: '/tmp/whatever' })).toMatchSnapshot();
+    expect(generateBazelShell({ bazelCommand: 'bazel', cacheDir: '/tmp/whatever' })).toMatchSnapshot();
 });

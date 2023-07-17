@@ -21,21 +21,28 @@
  * SOFTWARE.
  */
 
-import { setFailed, info, getState } from '@actions/core';
-import { saveCache } from '@actions/cache';
+export const generateBazelShell = ({
+    cacheDir,
+    bazelCommand
+}: Record<'cacheDir' | 'bazelCommand', string>) => `#!/bin/bash
 
-async function main() {
-    info('Now saving Bazel cache...');
-    const primaryKey = getState('bazel:cachePrimaryKey');
-    const cacheDir =
-        process.platform === 'win32'
-            ? `${process.env.RUNNER_TEMP}\\.bazelcache`
-            : `${process.env.RUNNER_TEMP || '/tmp'}/cache/bazel`;
+BAZEL_CACHE_DIR="${cacheDir}"
+BAZEL_CMD="${bazelCommand}"
 
-    await saveCache([cacheDir], primaryKey);
-}
+$BAZEL_CMD "--output_base=$BAZEL_CACHE_DIR" "$@"
+`;
 
-main().catch((ex) => {
-    setFailed(ex);
-    process.exit(1);
-});
+export const generateBazelPowerShell = ({
+    cacheDir,
+    bazelCommand
+}: Record<'cacheDir' | 'bazelCommand', string>) => `[CmdletBinding()]
+Param(
+    [Parameter(ValueFromRemainingArguments = $true)]$Arguments
+)
+
+$BazelCacheDir = "${cacheDir}";
+$BazelCommand = "${bazelCommand}"
+
+& $BazelCommand "--output_base=$BazelCacheDir" $Arguments
+exit $LASTEXITCODE
+`;

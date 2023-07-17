@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`scripts are expected to be 1`] = `
+"[CmdletBinding()]
+Param(
+    [Parameter(ValueFromRemainingArguments = $true)]$Arguments
+)
+
+$BazelCacheDir = \\"/tmp/whatever\\";
+$BazelCommand = \\"bazel\\"
+
+& $BazelCommand \\"--output_base=$BazelCacheDir\\" $Arguments
+exit $LASTEXITCODE
+"
+`;
+
+exports[`scripts are expected to be 2`] = `
+"#!/bin/bash
+
+BAZEL_CACHE_DIR=\\"/tmp/whatever\\"
+BAZEL_CMD=\\"bazel\\"
+
+$BAZEL_CMD \\"--output_base=$BAZEL_CACHE_DIR\\" \\"$@\\"
+"
+`;
