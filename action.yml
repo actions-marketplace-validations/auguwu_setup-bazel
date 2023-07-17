@@ -27,7 +27,7 @@ branding:
     icon: heart
 runs:
     using: node16
-    #post: ./build/save_action.js
+    post: ./build/save_action.js
     main: ./build/action.js
 inputs:
     hash-files:

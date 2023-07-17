@@ -43,6 +43,5 @@ Param(
 $BazelCacheDir = "${cacheDir}";
 $BazelCommand = "${bazelCommand}"
 
-& $BazelCommand "--output_base=$BazelCacheDir" $Arguments
-exit $LASTEXITCODE
+$BazelCommand "--output_base=$BazelCacheDir" $Arguments
 `;
